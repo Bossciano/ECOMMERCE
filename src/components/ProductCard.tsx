@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
+import { Link } from "react-router-dom";
 
 interface ProductCardProps {
   id: string;
@@ -18,35 +19,43 @@ const ProductCard = ({ id, image, name, price, category }: ProductCardProps) => 
 
   return (
     <Card className="group overflow-hidden border-border hover:shadow-lg transition-all duration-300">
-      <div className="relative overflow-hidden bg-secondary aspect-square">
-        <img
-          src={image}
-          alt={name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-        
-        {/* Overlay Actions */}
-        <div className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
-          <Button 
-            size="sm" 
-            className="bg-primary hover:bg-primary/90 text-primary-foreground"
-            onClick={() => addToCart({ id, name, price, image, category })}
-          >
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            Add to Cart
-          </Button>
-        </div>
-        
-        {/* Like Button */}
-        <button
-          onClick={() => setIsLiked(!isLiked)}
-          className="absolute top-3 right-3 p-2 rounded-full bg-background/90 hover:bg-background transition-colors"
-        >
-          <Heart
-            className={`h-4 w-4 ${isLiked ? "fill-accent text-accent" : "text-muted-foreground"}`}
+      <Link to={`/product/${id}`}>
+        <div className="relative overflow-hidden bg-secondary aspect-square">
+          <img
+            src={image}
+            alt={name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-        </button>
-      </div>
+          
+          {/* Overlay Actions */}
+          <div className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
+            <Button 
+              size="sm" 
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              onClick={(e) => {
+                e.preventDefault();
+                addToCart({ id, name, price, image, category });
+              }}
+            >
+              <ShoppingCart className="h-4 w-4 mr-2" />
+              Add to Cart
+            </Button>
+          </div>
+          
+          {/* Like Button */}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsLiked(!isLiked);
+            }}
+            className="absolute top-3 right-3 p-2 rounded-full bg-background/90 hover:bg-background transition-colors"
+          >
+            <Heart
+              className={`h-4 w-4 ${isLiked ? "fill-accent text-accent" : "text-muted-foreground"}`}
+            />
+          </button>
+        </div>
+      </Link>
       
       <div className="p-4">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">

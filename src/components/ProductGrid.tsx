@@ -1,39 +1,5 @@
 import ProductCard from "./ProductCard";
-import productWatch from "@/assets/product-watch.jpg";
-import productSneakers from "@/assets/product-sneakers.jpg";
-import productHeadphones from "@/assets/product-headphones.jpg";
-import productBackpack from "@/assets/product-backpack.jpg";
-
-const products = [
-  {
-    id: 1,
-    name: "Classic Timepiece",
-    price: 299.99,
-    category: "Watches",
-    image: productWatch,
-  },
-  {
-    id: 2,
-    name: "Urban Sneakers",
-    price: 129.99,
-    category: "Footwear",
-    image: productSneakers,
-  },
-  {
-    id: 3,
-    name: "Wireless Audio Pro",
-    price: 249.99,
-    category: "Electronics",
-    image: productHeadphones,
-  },
-  {
-    id: 4,
-    name: "Leather Backpack",
-    price: 189.99,
-    category: "Bags",
-    image: productBackpack,
-  },
-];
+import { products } from "@/data/products";
 
 const ProductGrid = () => {
   return (
@@ -52,7 +18,7 @@ const ProductGrid = () => {
           {products.map((product) => (
             <ProductCard
               key={product.id}
-              id={product.id.toString()}
+              id={product.id}
               image={product.image}
               name={product.name}
               price={product.price}
