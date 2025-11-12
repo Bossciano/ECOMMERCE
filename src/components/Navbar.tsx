@@ -1,9 +1,10 @@
 import { ShoppingCart, Search, Menu, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  const [cartCount] = useState(0);
+  const { totalItems } = useCart();
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -42,14 +43,16 @@ const Navbar = () => {
               <User className="h-5 w-5" />
             </Button>
             
-            <Button variant="ghost" size="icon" className="relative">
-              <ShoppingCart className="h-5 w-5" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-accent text-xs font-medium text-accent-foreground flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </Button>
+            <Link to="/cart">
+              <Button variant="ghost" size="icon" className="relative">
+                <ShoppingCart className="h-5 w-5" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-accent text-xs font-medium text-accent-foreground flex items-center justify-center">
+                    {totalItems}
+                  </span>
+                )}
+              </Button>
+            </Link>
             
             <Button variant="ghost" size="icon" className="md:hidden">
               <Menu className="h-5 w-5" />

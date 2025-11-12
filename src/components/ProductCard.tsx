@@ -2,16 +2,19 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart } from "lucide-react";
 import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
 
 interface ProductCardProps {
+  id: string;
   image: string;
   name: string;
   price: number;
   category: string;
 }
 
-const ProductCard = ({ image, name, price, category }: ProductCardProps) => {
+const ProductCard = ({ id, image, name, price, category }: ProductCardProps) => {
   const [isLiked, setIsLiked] = useState(false);
+  const { addToCart } = useCart();
 
   return (
     <Card className="group overflow-hidden border-border hover:shadow-lg transition-all duration-300">
@@ -24,7 +27,11 @@ const ProductCard = ({ image, name, price, category }: ProductCardProps) => {
         
         {/* Overlay Actions */}
         <div className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
-          <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+          <Button 
+            size="sm" 
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            onClick={() => addToCart({ id, name, price, image, category })}
+          >
             <ShoppingCart className="h-4 w-4 mr-2" />
             Add to Cart
           </Button>

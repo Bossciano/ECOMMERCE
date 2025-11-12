@@ -52,6 +52,7 @@ const ProductGrid = () => {
           {products.map((product) => (
             <ProductCard
               key={product.id}
+              id={product.id.toString()}
               image={product.image}
               name={product.name}
               price={product.price}
