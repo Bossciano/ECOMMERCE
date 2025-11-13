@@ -2,12 +2,13 @@ import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Minus, Plus, Trash2, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const Cart = () => {
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
+  const navigate = useNavigate();
 
   if (items.length === 0) {
     return (
@@ -132,7 +133,10 @@ const Cart = () => {
                   </div>
                 </div>
 
-                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground mb-3">
+                <Button 
+                  onClick={() => navigate("/checkout")}
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground mb-3"
+                >
                   Proceed to Checkout
                 </Button>
                 
