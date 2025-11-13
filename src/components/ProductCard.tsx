@@ -1,8 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart } from "lucide-react";
-import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { Link } from "react-router-dom";
 
 interface ProductCardProps {
@@ -14,8 +14,9 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ id, image, name, price, category }: ProductCardProps) => {
-  const [isLiked, setIsLiked] = useState(false);
   const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const isLiked = isInWishlist(id);
 
   return (
     <Card className="group overflow-hidden border-border hover:shadow-lg transition-all duration-300">
@@ -46,7 +47,7 @@ const ProductCard = ({ id, image, name, price, category }: ProductCardProps) => 
           <button
             onClick={(e) => {
               e.preventDefault();
-              setIsLiked(!isLiked);
+              toggleWishlist({ id, name, price, image, category });
             }}
             className="absolute top-3 right-3 p-2 rounded-full bg-background/90 hover:bg-background transition-colors"
           >

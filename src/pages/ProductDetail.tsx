@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { getProductById, getRelatedProducts } from "@/data/products";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -14,12 +15,14 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
   const product = id ? getProductById(id) : undefined;
   
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
-  const [isLiked, setIsLiked] = useState(false);
+  
+  const isLiked = product ? isInWishlist(product.id) : false;
 
   if (!product) {
     return (
@@ -200,7 +203,13 @@ const ProductDetail = () => {
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => setIsLiked(!isLiked)}
+                onClick={() => toggleWishlist({
+                  id: product.id,
+                  name: product.name,
+                  price: product.price,
+                  image: product.image,
+                  category: product.category,
+                })}
                 className={isLiked ? "border-accent" : ""}
               >
                 <Heart
