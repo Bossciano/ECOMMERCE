@@ -19,20 +19,21 @@ const ProductCard = ({ id, image, name, price, category }: ProductCardProps) => 
   const isLiked = isInWishlist(id);
 
   return (
-    <Card className="group overflow-hidden border-border hover:shadow-lg transition-all duration-300">
+    <Card className="group overflow-hidden rounded-2xl border border-[#e6dccb] bg-[#faf8f4] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <Link to={`/product/${id}`}>
-        <div className="relative overflow-hidden bg-secondary aspect-square">
+        {/* Image */}
+        <div className="relative aspect-square bg-[#f3eee6] overflow-hidden">
           <img
             src={image}
             alt={name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-105"
           />
-          
+
           {/* Overlay Actions */}
-          <div className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
-            <Button 
-              size="sm" 
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+          <div className="absolute inset-0 bg-[#faf8f4]/85 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+            <Button
+              size="sm"
+              className="bg-[#3b2f2f] hover:bg-[#2a211f] text-[#faf8f4]"
               onClick={(e) => {
                 e.preventDefault();
                 addToCart({ id, name, price, image, category });
@@ -42,28 +43,39 @@ const ProductCard = ({ id, image, name, price, category }: ProductCardProps) => 
               Add to Cart
             </Button>
           </div>
-          
-          {/* Like Button */}
+
+          {/* Wishlist Button */}
           <button
             onClick={(e) => {
               e.preventDefault();
               toggleWishlist({ id, name, price, image, category });
             }}
-            className="absolute top-3 right-3 p-2 rounded-full bg-background/90 hover:bg-background transition-colors"
+            className="absolute top-3 right-3 p-2 rounded-full bg-[#faf8f4]/90 hover:bg-[#faf8f4]"
           >
             <Heart
-              className={`h-4 w-4 ${isLiked ? "fill-accent text-accent" : "text-muted-foreground"}`}
+              className={`h-4 w-4 transition-colors ${
+                isLiked
+                  ? "fill-[#c2a46d] text-[#c2a46d]"
+                  : "text-[#6b5c4d]"
+              }`}
             />
           </button>
         </div>
       </Link>
-      
-      <div className="p-4">
-        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
+
+      {/* Content */}
+      <div className="p-5">
+        <p className="text-xs font-medium uppercase tracking-wide text-[#6b5c4d] mb-1">
           {category}
         </p>
-        <h3 className="font-semibold text-foreground mb-2">{name}</h3>
-        <p className="text-lg font-bold text-primary">${price.toFixed(2)}</p>
+
+        <h3 className="font-semibold text-[#3b2f2f] mb-2">
+          {name}
+        </h3>
+
+        <p className="text-lg font-bold text-[#c2a46d]">
+          ₦{price.toFixed(2)}
+        </p>
       </div>
     </Card>
   );
