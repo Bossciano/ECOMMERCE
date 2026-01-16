@@ -13,38 +13,23 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-8">
-            <a href="/" className="text-2xl font-bold text-foreground">
-              SHOP
-            </a>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-6">
-              <a href="#new" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                New Arrivals
-              </a>
-              <a href="#men" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Men
-              </a>
-              <a href="#women" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Women
-              </a>
-              <a href="#accessories" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Accessories
-              </a>
-            </div>
-          </div>
+          <Link to="/" className="text-2xl font-bold text-foreground">
+            SHOP
+          </Link>
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-4">
+            {/* Search Icon */}
             <Button variant="ghost" size="icon" className="hidden md:flex">
               <Search className="h-5 w-5" />
             </Button>
-            
+
+            {/* User Icon */}
             <Button variant="ghost" size="icon" className="hidden md:flex">
               <User className="h-5 w-5" />
             </Button>
-            
+
+            {/* Wishlist */}
             <Link to="/wishlist">
               <Button variant="ghost" size="icon" className="relative">
                 <Heart className="h-5 w-5" />
@@ -55,7 +40,8 @@ const Navbar = () => {
                 )}
               </Button>
             </Link>
-            
+
+            {/* Cart */}
             <Link to="/cart">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
@@ -66,7 +52,8 @@ const Navbar = () => {
                 )}
               </Button>
             </Link>
-            
+
+            {/* Mobile Menu */}
             <Button variant="ghost" size="icon" className="md:hidden">
               <Menu className="h-5 w-5" />
             </Button>
