@@ -19,15 +19,12 @@ interface FilterBarProps {
   onClearFilters: () => void;
 }
 
-const categories = ["All", "Watches", "Footwear", "Electronics", "Bags"];
+const categories = ["All", "Perfume"];
 
 const colors = [
-  { name: "Black", value: "#000000" },
   { name: "White", value: "#FFFFFF" },
-  { name: "Silver", value: "#C0C0C0" },
-  { name: "Gold", value: "#FFD700" },
-  { name: "Navy", value: "#1E3A5F" },
   { name: "Brown", value: "#8B4513" },
+  { name: "Champagne", value: "#C2A46D" },
 ];
 
 const FilterBar = ({
@@ -44,18 +41,18 @@ const FilterBar = ({
   onClearFilters,
 }: FilterBarProps) => {
   return (
-    <div className="bg-card border-b border-border">
+    <div className="bg-[#faf8f4] border-b border-[#c2a46d]/50">
       <div className="container mx-auto px-4 py-6">
         {/* Search Bar */}
         <div className="mb-6">
           <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6b5c4d]" size={20} />
             <Input
               type="text"
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-10"
+              className="pl-10 border-[#c2a46d]/50 focus:border-[#c2a46d]"
             />
           </div>
         </div>
@@ -63,13 +60,14 @@ const FilterBar = ({
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Category Filters */}
           <div className="flex-1">
-            <h3 className="text-sm font-semibold text-foreground mb-3">Category</h3>
+            <h3 className="text-sm font-semibold text-[#3b2f2f] mb-3">Category</h3>
             <div className="flex flex-wrap gap-2">
               {categories.map((category) => (
                 <Button
                   key={category}
                   variant={selectedCategory === category ? "default" : "outline"}
                   size="sm"
+                  className={selectedCategory === category ? "bg-[#c2a46d] text-white" : "border-[#c2a46d]/50 text-[#3b2f2f]"}
                   onClick={() => onCategoryChange(category)}
                 >
                   {category}
@@ -80,7 +78,7 @@ const FilterBar = ({
 
           {/* Price Range */}
           <div className="flex-1">
-            <h3 className="text-sm font-semibold text-foreground mb-3">
+            <h3 className="text-sm font-semibold text-[#3b2f2f] mb-3">
               Price Range: ${priceRange[0]} - ${priceRange[1]}
             </h3>
             <Slider
@@ -89,13 +87,13 @@ const FilterBar = ({
               min={0}
               max={500}
               step={10}
-              className="w-full"
+              className="w-full accent-[#c2a46d]"
             />
           </div>
 
           {/* Color Filters */}
           <div className="flex-1">
-            <h3 className="text-sm font-semibold text-foreground mb-3">Colors</h3>
+            <h3 className="text-sm font-semibold text-[#3b2f2f] mb-3">Colors</h3>
             <div className="flex flex-wrap gap-2">
               {colors.map((color) => (
                 <Toggle
@@ -105,7 +103,7 @@ const FilterBar = ({
                   className="w-10 h-10 rounded-full p-0 border-2"
                   style={{
                     backgroundColor: color.value,
-                    borderColor: selectedColors.includes(color.name) ? "hsl(var(--primary))" : "hsl(var(--border))",
+                    borderColor: selectedColors.includes(color.name) ? "#3b2f2f" : "#c2a46d",
                   }}
                   aria-label={color.name}
                 />
@@ -115,9 +113,9 @@ const FilterBar = ({
 
           {/* Sort Options */}
           <div className="flex-1">
-            <h3 className="text-sm font-semibold text-foreground mb-3">Sort By</h3>
+            <h3 className="text-sm font-semibold text-[#3b2f2f] mb-3">Sort By</h3>
             <Select value={sortBy} onValueChange={onSortChange}>
-              <SelectTrigger>
+              <SelectTrigger className="border-[#c2a46d]/50 focus:border-[#c2a46d]">
                 <SelectValue placeholder="Select sort order" />
               </SelectTrigger>
               <SelectContent>
@@ -132,7 +130,12 @@ const FilterBar = ({
 
         {/* Clear Filters */}
         <div className="mt-4 flex justify-end">
-          <Button variant="ghost" size="sm" onClick={onClearFilters}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-[#3b2f2f] border-[#c2a46d]/50 hover:bg-[#c2a46d]/10"
+            onClick={onClearFilters}
+          >
             <X size={16} className="mr-2" />
             Clear All Filters
           </Button>
