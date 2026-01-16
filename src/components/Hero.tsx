@@ -1,8 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import heroBanner from "@/assets/heropage.png";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext"; // replace with your auth context
 
 const Hero = () => {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth(); // boolean: true if logged in
+
+  const handleShopNow = () => {
+    if (isLoggedIn) {
+      navigate("/shop"); // go to shop if logged in
+    } else {
+      navigate("/login"); // go to login if not logged in
+    }
+  };
+
   return (
     <section className="relative h-[600px] overflow-hidden">
       {/* Background Image */}
@@ -30,7 +43,8 @@ const Hero = () => {
           <div className="flex flex-wrap gap-4">
             <Button
               size="lg"
-              className="bg-[#3b2f2f] hover:bg-[#2a211f] text-[#faf8f4]"
+              className="bg-[#3b2f2f] hover:bg-[#2a211f] text-[#faf8f4] flex items-center"
+              onClick={handleShopNow} // smarter navigation
             >
               Shop Now
               <ArrowRight className="ml-2 h-5 w-5" />
