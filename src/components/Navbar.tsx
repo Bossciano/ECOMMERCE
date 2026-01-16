@@ -10,6 +10,14 @@ const Navbar = () => {
   const { totalItems: wishlistItems } = useWishlist();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Function to scroll to the FilterBar
+  const scrollToFilterBar = () => {
+    const filterBar = document.getElementById("filter-bar");
+    if (filterBar) {
+      filterBar.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <>
       <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -23,7 +31,12 @@ const Navbar = () => {
             {/* Right Side Actions */}
             <div className="flex items-center gap-4">
               {/* Search Icon */}
-              <Button variant="ghost" size="icon" className="hidden md:flex">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hidden md:flex"
+                onClick={scrollToFilterBar} // Scroll to FilterBar
+              >
                 <Search className="h-5 w-5" />
               </Button>
 
@@ -96,13 +109,19 @@ const Navbar = () => {
 
             {/* Mobile Menu Items */}
             <div className="flex flex-col gap-4">
-              <Link
-                to="/search"
-                className="text-lg font-medium text-muted-foreground hover:text-foreground transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="flex items-center gap-2"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  scrollToFilterBar();
+                }}
               >
+                <Search className="h-5 w-5" />
                 Search
-              </Link>
+              </Button>
+
               <Link
                 to="/account"
                 className="text-lg font-medium text-muted-foreground hover:text-foreground transition-colors"
