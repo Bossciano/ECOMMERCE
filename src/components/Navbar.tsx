@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ShoppingCart, Search, Menu, User, Heart, X } from "lucide-react";
+import { ShoppingCart, Search, Menu, User, Heart, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
@@ -11,6 +11,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   // Handle scroll effect
   useEffect(() => {
@@ -45,76 +46,98 @@ const Navbar = () => {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
 
         :root {
-          --champagne: #F7E7CE;
-          --champagne-dark: #E8D4B8;
-          --champagne-light: #FDF5E6;
-          --brown: #6B4423;
-          --brown-dark: #523518;
-          --brown-light: #8B6239;
-          --white: #FFFFFF;
-          --cream: #FAF8F3;
+          --gold: #D4AF37;
+          --gold-light: #F4E4C1;
+          --gold-dark: #B8941F;
+          --charcoal: #1A1A1A;
+          --charcoal-light: #2D2D2D;
+          --ivory: #FFFFF0;
+          --cream: #FAF9F6;
+          --silver: #C0C0C0;
+          --accent: #8B7355;
+        }
+
+        * {
+          -webkit-tap-highlight-color: transparent;
         }
 
         .nav-container {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: 'Montserrat', sans-serif;
+          letter-spacing: 0.02em;
         }
 
         .nav-logo {
-          font-family: 'Playfair Display', serif;
-          font-weight: 900;
-          letter-spacing: 0.08em;
-          background: linear-gradient(135deg, var(--brown) 0%, var(--brown-light) 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          transition: all 0.3s ease;
+          font-family: 'Libre Baskerville', serif;
+          font-weight: 700;
+          letter-spacing: 0.15em;
+          position: relative;
+          display: inline-block;
         }
 
-        .nav-logo:hover {
-          background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown) 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          transform: translateY(-1px);
+        .nav-logo::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, var(--gold), transparent);
+          transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-logo:hover::after {
+          width: 100%;
         }
 
         .nav-scrolled {
-          background: var(--white);
-          box-shadow: 0 4px 24px rgba(107, 68, 35, 0.08);
-          border-bottom: 1px solid var(--champagne);
+          background: rgba(250, 249, 246, 0.98);
+          backdrop-filter: blur(20px);
+          box-shadow: 0 1px 0 rgba(212, 175, 55, 0.1),
+                      0 8px 32px rgba(26, 26, 26, 0.08);
+          border-bottom: 1px solid rgba(212, 175, 55, 0.2);
         }
 
         .nav-base {
           background: var(--cream);
-          border-bottom: 1px solid var(--champagne-dark);
+          border-bottom: 1px solid rgba(212, 175, 55, 0.15);
         }
 
         .icon-button {
           position: relative;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-          color: var(--brown);
-        }
-
-        .icon-button:hover {
-          transform: translateY(-2px);
-          color: var(--brown-dark);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          color: var(--charcoal);
+          background: transparent;
+          border: none;
+          cursor: pointer;
         }
 
         .icon-button::before {
           content: '';
           position: absolute;
           inset: 0;
-          border-radius: 0.5rem;
-          background: linear-gradient(135deg, var(--champagne) 0%, var(--champagne-light) 100%);
+          border-radius: 50%;
+          background: radial-gradient(circle, var(--gold-light) 0%, transparent 70%);
           opacity: 0;
-          transition: opacity 0.2s ease;
+          transform: scale(0.8);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .icon-button:hover::before {
-          opacity: 1;
+          opacity: 0.3;
+          transform: scale(1);
+        }
+
+        .icon-button:hover {
+          color: var(--gold-dark);
+          transform: translateY(-2px);
+        }
+
+        .icon-button:active {
+          transform: translateY(0);
         }
 
         .icon-button > * {
@@ -123,20 +146,108 @@ const Navbar = () => {
         }
 
         .badge-count {
-          animation: badge-pop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          animation: badge-appear 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 600;
+          font-size: 0.625rem;
+          letter-spacing: 0.02em;
         }
 
-        @keyframes badge-pop {
-          0% { transform: scale(0); }
-          50% { transform: scale(1.2); }
-          100% { transform: scale(1); }
+        @keyframes badge-appear {
+          0% { 
+            transform: scale(0) rotate(-180deg);
+            opacity: 0;
+          }
+          50% { 
+            transform: scale(1.25) rotate(10deg);
+          }
+          100% { 
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+          }
         }
 
-        .mobile-menu-enter {
-          animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .badge-luxury {
+          background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+          color: var(--charcoal);
+          box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4),
+                      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        @keyframes slideIn {
+        .badge-wishlist {
+          background: linear-gradient(135deg, var(--accent) 0%, var(--charcoal-light) 100%);
+          color: var(--gold-light);
+          box-shadow: 0 2px 8px rgba(139, 115, 85, 0.4),
+                      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        .search-bar {
+          animation: searchSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.03) 100%);
+          border-top: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        @keyframes searchSlide {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .search-input-wrapper {
+          position: relative;
+          box-shadow: 0 4px 24px rgba(26, 26, 26, 0.08);
+        }
+
+        .search-input {
+          background: var(--ivory);
+          border: 2px solid transparent;
+          color: var(--charcoal);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          font-weight: 500;
+          letter-spacing: 0.02em;
+        }
+
+        .search-input:focus {
+          outline: none;
+          border-color: var(--gold);
+          background: var(--cream);
+          box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1),
+                      0 8px 32px rgba(212, 175, 55, 0.15);
+        }
+
+        .search-input::placeholder {
+          color: var(--silver);
+          font-weight: 400;
+        }
+
+        .search-icon {
+          color: var(--gold-dark);
+        }
+
+        .mobile-menu-overlay {
+          animation: overlayFade 0.3s ease;
+          background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(45, 45, 45, 0.9) 100%);
+          backdrop-filter: blur(8px);
+        }
+
+        @keyframes overlayFade {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        .mobile-menu-sidebar {
+          animation: sidebarSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          background: linear-gradient(135deg, var(--cream) 0%, var(--ivory) 100%);
+          box-shadow: 4px 0 24px rgba(26, 26, 26, 0.2);
+        }
+
+        @keyframes sidebarSlide {
           from {
             transform: translateX(-100%);
             opacity: 0;
@@ -147,159 +258,214 @@ const Navbar = () => {
           }
         }
 
-        .mobile-menu-overlay {
-          animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+        .mobile-menu-header {
+          background: linear-gradient(180deg, var(--ivory) 0%, var(--cream) 100%);
+          border-bottom: 1px solid var(--gold-light);
+          box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
         }
 
         .mobile-menu-item {
-          transition: all 0.2s ease;
-          padding: 0.875rem 1.25rem;
-          border-radius: 0.5rem;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          padding: 1rem 1.5rem;
+          border-radius: 12px;
           display: flex;
           align-items: center;
-          gap: 0.875rem;
-          color: var(--brown);
+          gap: 1rem;
+          color: var(--charcoal);
           font-weight: 500;
-          font-size: 1.0625rem;
+          font-size: 1rem;
+          letter-spacing: 0.02em;
+          position: relative;
+          overflow: hidden;
+          margin-bottom: 0.5rem;
+        }
+
+        .mobile-menu-item::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 0;
+          background: linear-gradient(90deg, var(--gold) 0%, transparent 100%);
+          transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mobile-menu-item:hover::before {
+          width: 100%;
+          opacity: 0.15;
         }
 
         .mobile-menu-item:hover {
-          background: var(--champagne-light);
-          transform: translateX(6px);
+          background: linear-gradient(90deg, var(--gold-light) 0%, transparent 100%);
+          transform: translateX(8px);
+          color: var(--gold-dark);
         }
 
-        .search-bar {
-          animation: searchExpand 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .mobile-menu-item > * {
+          position: relative;
+          z-index: 1;
         }
 
-        @keyframes searchExpand {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+        .badge-mobile {
+          background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+          color: var(--charcoal);
+          font-weight: 600;
+          box-shadow: 0 2px 6px rgba(212, 175, 55, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .search-input {
-          background: var(--white);
-          border: 1.5px solid var(--champagne-dark);
-          color: var(--brown);
-          transition: all 0.2s ease;
-        }
-
-        .search-input:focus {
-          outline: none;
-          border-color: var(--brown-light);
-          box-shadow: 0 0 0 3px rgba(107, 68, 35, 0.1);
-        }
-
-        .search-input::placeholder {
-          color: var(--brown-light);
+        .mobile-menu-footer {
+          background: linear-gradient(180deg, transparent 0%, var(--gold-light) 100%);
+          border-top: 1px solid var(--gold);
+          color: var(--charcoal-light);
         }
 
         .divider {
           height: 1px;
           background: linear-gradient(90deg, 
             transparent 0%, 
-            var(--champagne-dark) 50%, 
+            var(--gold) 50%, 
             transparent 100%
           );
           margin: 1.5rem 0;
+          opacity: 0.3;
         }
 
-        .badge-wishlist {
-          background: linear-gradient(135deg, var(--brown-light) 0%, var(--brown) 100%);
-          color: var(--white);
-          box-shadow: 0 2px 8px rgba(107, 68, 35, 0.3);
+        .luxury-text {
+          background: linear-gradient(135deg, var(--charcoal) 0%, var(--charcoal-light) 50%, var(--gold-dark) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
 
-        .badge-cart {
-          background: linear-gradient(135deg, var(--brown) 0%, var(--brown-dark) 100%);
-          color: var(--champagne-light);
-          box-shadow: 0 2px 8px rgba(107, 68, 35, 0.4);
+        /* Shimmer effect for logo */
+        @keyframes shimmer {
+          0% {
+            background-position: -200% center;
+          }
+          100% {
+            background-position: 200% center;
+          }
         }
 
-        .badge-mobile {
-          background: var(--champagne);
-          color: var(--brown-dark);
-          font-weight: 600;
+        .nav-logo:hover {
+          background: linear-gradient(90deg, 
+            var(--charcoal) 0%, 
+            var(--gold) 25%, 
+            var(--gold-light) 50%, 
+            var(--gold) 75%, 
+            var(--charcoal) 100%
+          );
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: shimmer 2s linear infinite;
         }
 
-        .mobile-menu-bg {
+        .premium-border {
+          border: 1px solid;
+          border-image: linear-gradient(90deg, transparent, var(--gold), transparent) 1;
+        }
+
+        /* Close button premium style */
+        .close-btn {
+          transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+          transform: rotate(90deg);
+          color: var(--gold-dark);
+        }
+
+        /* Smooth scrollbar for mobile menu */
+        .mobile-menu-content::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .mobile-menu-content::-webkit-scrollbar-track {
           background: var(--cream);
         }
 
-        .mobile-menu-header {
-          border-bottom: 1px solid var(--champagne-dark);
-          background: var(--white);
+        .mobile-menu-content::-webkit-scrollbar-thumb {
+          background: var(--gold-light);
+          border-radius: 3px;
         }
 
-        .mobile-menu-footer {
-          border-top: 1px solid var(--champagne-dark);
-          background: var(--champagne-light);
-          color: var(--brown-light);
+        .mobile-menu-content::-webkit-scrollbar-thumb:hover {
+          background: var(--gold);
         }
 
-        /* Smooth transitions for all interactive elements */
-        * {
-          -webkit-tap-highlight-color: transparent;
+        /* Elegant hover states */
+        .elegant-hover {
+          position: relative;
+          overflow: hidden;
         }
 
-        .hover-bg-champagne:hover {
-          background: var(--champagne-light);
+        .elegant-hover::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          border-radius: 50%;
+          background: radial-gradient(circle, var(--gold-light) 0%, transparent 70%);
+          transform: translate(-50%, -50%);
+          transition: width 0.4s ease, height 0.4s ease;
+          opacity: 0;
+        }
+
+        .elegant-hover:hover::after {
+          width: 200px;
+          height: 200px;
+          opacity: 0.3;
         }
       `}</style>
 
       <nav
-        className={`nav-container sticky top-0 z-50 w-full transition-all duration-300 ${
+        className={`nav-container sticky top-0 z-50 w-full transition-all duration-500 ${
           isScrolled ? "nav-scrolled" : "nav-base"
         }`}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 sm:h-20 items-center justify-between">
+          <div className="flex h-20 sm:h-24 items-center justify-between">
             {/* Logo */}
-            <Link to="/" className="nav-logo text-2xl sm:text-3xl flex-shrink-0">
-              SHOP
+            <Link to="/" className="nav-logo luxury-text text-2xl sm:text-3xl flex-shrink-0">
+              ÉLÉGANCE
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-2 lg:gap-3">
+            <div className="hidden md:flex items-center gap-1 lg:gap-2">
               {/* Search Icon */}
               <button
-                className="icon-button p-2.5 rounded-lg transition-colors"
+                className="icon-button elegant-hover p-3 rounded-full transition-colors"
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
                 aria-label="Search"
               >
-                <Search className="h-5 w-5" />
+                <Search className="h-5 w-5" strokeWidth={1.5} />
               </button>
 
               {/* User Icon */}
               <Link to="/account">
                 <button
-                  className="icon-button p-2.5 rounded-lg transition-colors"
+                  className="icon-button elegant-hover p-3 rounded-full transition-colors"
                   aria-label="Account"
                 >
-                  <User className="h-5 w-5" />
+                  <User className="h-5 w-5" strokeWidth={1.5} />
                 </button>
               </Link>
 
               {/* Wishlist */}
               <Link to="/wishlist">
                 <button
-                  className="icon-button relative p-2.5 rounded-lg transition-colors"
+                  className="icon-button elegant-hover relative p-3 rounded-full transition-colors"
                   aria-label={`Wishlist (${wishlistItems} items)`}
                 >
-                  <Heart className="h-5 w-5" />
+                  <Heart className="h-5 w-5" strokeWidth={1.5} />
                   {wishlistItems > 0 && (
-                    <span className="badge-count badge-wishlist absolute -top-1 -right-1 h-5 w-5 rounded-full text-xs font-semibold flex items-center justify-center">
+                    <span className="badge-count badge-wishlist absolute -top-1 -right-1 h-5 w-5 rounded-full text-[0.625rem] font-semibold flex items-center justify-center">
                       {wishlistItems > 9 ? "9+" : wishlistItems}
                     </span>
                   )}
@@ -309,12 +475,12 @@ const Navbar = () => {
               {/* Cart */}
               <Link to="/cart">
                 <button
-                  className="icon-button relative p-2.5 rounded-lg transition-colors"
+                  className="icon-button elegant-hover relative p-3 rounded-full transition-colors"
                   aria-label={`Cart (${totalItems} items)`}
                 >
-                  <ShoppingCart className="h-5 w-5" />
+                  <ShoppingCart className="h-5 w-5" strokeWidth={1.5} />
                   {totalItems > 0 && (
-                    <span className="badge-count badge-cart absolute -top-1 -right-1 h-5 w-5 rounded-full text-xs font-semibold flex items-center justify-center">
+                    <span className="badge-count badge-luxury absolute -top-1 -right-1 h-5 w-5 rounded-full text-[0.625rem] font-semibold flex items-center justify-center">
                       {totalItems > 9 ? "9+" : totalItems}
                     </span>
                   )}
@@ -324,38 +490,42 @@ const Navbar = () => {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden icon-button p-2.5 rounded-lg transition-colors"
+              className="md:hidden icon-button elegant-hover p-3 rounded-full transition-colors"
               onClick={() => setIsMobileMenuOpen(true)}
               aria-label="Open menu"
             >
-              <Menu className="h-6 w-6" />
+              <Menu className="h-6 w-6" strokeWidth={1.5} />
             </button>
           </div>
 
           {/* Desktop Search Bar */}
           {isSearchOpen && (
-            <div className="search-bar pb-4 pt-2">
-              <div className="flex items-center gap-3 max-w-2xl mx-auto">
-                <div className="flex-1 relative">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--brown-light)]" />
-                  <input
-                    type="text"
-                    placeholder="Search products..."
-                    className="search-input w-full pl-12 pr-4 py-3 rounded-xl font-medium"
-                    autoFocus
-                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                      if (e.key === "Enter") {
-                        scrollToFilterBar();
-                      }
-                    }}
-                  />
+            <div className="search-bar pb-6 pt-4">
+              <div className="flex items-center gap-4 max-w-3xl mx-auto">
+                <div className="flex-1 search-input-wrapper rounded-2xl overflow-hidden">
+                  <div className="relative">
+                    <Search className="search-icon absolute left-5 top-1/2 transform -translate-y-1/2 h-5 w-5" strokeWidth={2} />
+                    <input
+                      type="text"
+                      placeholder="Discover luxury products..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="search-input w-full pl-14 pr-6 py-4 text-base"
+                      autoFocus
+                      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                        if (e.key === "Enter") {
+                          scrollToFilterBar();
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
                 <button
                   onClick={() => setIsSearchOpen(false)}
-                  className="icon-button p-2.5 rounded-lg transition-colors"
+                  className="icon-button close-btn elegant-hover p-3 rounded-full transition-all"
                   aria-label="Close search"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-5 w-5" strokeWidth={2} />
                 </button>
               </div>
             </div>
@@ -368,34 +538,34 @@ const Navbar = () => {
         <div className="fixed inset-0 z-50 md:hidden">
           {/* Overlay */}
           <div
-            className="mobile-menu-overlay fixed inset-0 bg-[var(--brown-dark)]/60 backdrop-blur-sm"
+            className="mobile-menu-overlay fixed inset-0"
             onClick={() => setIsMobileMenuOpen(false)}
           />
 
           {/* Sidebar */}
-          <div className="mobile-menu-enter mobile-menu-bg relative z-50 w-80 max-w-[85vw] h-full shadow-2xl">
+          <div className="mobile-menu-sidebar relative z-50 w-80 max-w-[85vw] h-full">
             <div className="flex flex-col h-full">
               {/* Header */}
-              <div className="mobile-menu-header flex justify-between items-center p-6">
+              <div className="mobile-menu-header flex justify-between items-center p-6 sm:p-8">
                 <Link
                   to="/"
-                  className="nav-logo text-3xl"
+                  className="nav-logo luxury-text text-3xl"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  SHOP
+                  ÉLÉGANCE
                 </Link>
                 <button
-                  className="icon-button p-2 rounded-lg transition-colors"
+                  className="icon-button close-btn p-2 rounded-full transition-all"
                   onClick={() => setIsMobileMenuOpen(false)}
                   aria-label="Close menu"
                 >
-                  <X className="h-6 w-6" />
+                  <X className="h-6 w-6" strokeWidth={2} />
                 </button>
               </div>
 
               {/* Menu Items */}
-              <div className="flex-1 overflow-y-auto p-6">
-                <div className="space-y-1">
+              <div className="flex-1 overflow-y-auto mobile-menu-content p-6">
+                <div className="space-y-2">
                   {/* Search */}
                   <button
                     className="mobile-menu-item w-full text-left"
@@ -404,8 +574,8 @@ const Navbar = () => {
                       setTimeout(scrollToFilterBar, 300);
                     }}
                   >
-                    <Search className="h-5 w-5" />
-                    <span>Search Products</span>
+                    <Search className="h-5 w-5" strokeWidth={1.5} />
+                    <span>Search Collection</span>
                   </button>
 
                   <div className="divider" />
@@ -416,7 +586,7 @@ const Navbar = () => {
                     className="mobile-menu-item"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <User className="h-5 w-5" />
+                    <User className="h-5 w-5" strokeWidth={1.5} />
                     <span>My Account</span>
                   </Link>
 
@@ -426,10 +596,10 @@ const Navbar = () => {
                     className="mobile-menu-item"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <Heart className="h-5 w-5" />
+                    <Heart className="h-5 w-5" strokeWidth={1.5} />
                     <span className="flex-1">Wishlist</span>
                     {wishlistItems > 0 && (
-                      <span className="badge-mobile px-2.5 py-1 rounded-full text-sm">
+                      <span className="badge-mobile px-3 py-1.5 rounded-full text-xs">
                         {wishlistItems}
                       </span>
                     )}
@@ -441,10 +611,10 @@ const Navbar = () => {
                     className="mobile-menu-item"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <ShoppingCart className="h-5 w-5" />
-                    <span className="flex-1">Shopping Cart</span>
+                    <ShoppingCart className="h-5 w-5" strokeWidth={1.5} />
+                    <span className="flex-1">Shopping Bag</span>
                     {totalItems > 0 && (
-                      <span className="badge-mobile px-2.5 py-1 rounded-full text-sm">
+                      <span className="badge-mobile px-3 py-1.5 rounded-full text-xs">
                         {totalItems}
                       </span>
                     )}
@@ -453,9 +623,9 @@ const Navbar = () => {
               </div>
 
               {/* Footer */}
-              <div className="mobile-menu-footer p-6">
-                <p className="text-sm text-center font-medium">
-                  © 2024 SHOP. All rights reserved.
+              <div className="mobile-menu-footer p-6 text-center">
+                <p className="text-xs font-medium tracking-wider uppercase opacity-70">
+                  Curated Luxury Since 2024
                 </p>
               </div>
             </div>
