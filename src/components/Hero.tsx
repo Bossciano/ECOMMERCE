@@ -2,18 +2,18 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import heroBanner from "@/assets/heropage.png";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext"; // replace with your auth context
 
-const Hero = () => {
-  const navigate = useNavigate();
-  const { isLoggedIn } = useAuth(); // boolean: true if logged in
 
-  const handleShopNow = () => {
-    if (isLoggedIn) {
-      navigate("/shop"); // go to shop if logged in
-    } else {
-      navigate("/login"); // go to login if not logged in
-    }
+//const Hero = () => {
+//  const navigate = useNavigate();
+//  const { isLoggedIn } = useAuth(); // boolean: true if logged in
+
+//  const handleShopNow = () => {
+//    if (isLoggedIn) {
+ //     navigate("/shop"); // go to shop if logged in
+//   } else {
+ //     navigate("/login"); // go to login if not logged in
+  //  }
   };
 
   return (
