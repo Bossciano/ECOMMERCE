@@ -3,17 +3,12 @@ import { ArrowRight } from "lucide-react";
 import heroBanner from "@/assets/heropage.png";
 import { useNavigate } from "react-router-dom";
 
+const Hero = () => {
+  const navigate = useNavigate();
 
-//const Hero = () => {
-//  const navigate = useNavigate();
-//  const { isLoggedIn } = useAuth(); // boolean: true if logged in
-
-//  const handleShopNow = () => {
-//    if (isLoggedIn) {
- //     navigate("/shop"); // go to shop if logged in
-//   } else {
- //     navigate("/login"); // go to login if not logged in
-  //  }
+  // Simple navigation without AuthContext
+  const handleShopNow = () => {
+    navigate("/shop"); // always go to /shop
   };
 
   return (
@@ -44,7 +39,7 @@ import { useNavigate } from "react-router-dom";
             <Button
               size="lg"
               className="bg-[#3b2f2f] hover:bg-[#2a211f] text-[#faf8f4] flex items-center"
-              onClick={handleShopNow} // smarter navigation
+              onClick={handleShopNow}
             >
               Shop Now
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -54,6 +49,7 @@ import { useNavigate } from "react-router-dom";
               size="lg"
               variant="outline"
               className="border-[#c2a46d] text-[#3b2f2f] hover:bg-[#c2a46d]/10"
+              onClick={() => navigate("/collection")}
             >
               Explore Collection
             </Button>
