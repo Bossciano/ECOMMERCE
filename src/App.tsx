@@ -1,50 +1,47 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistProvider";
-import Index from "./pages/Index";
-import Cart from "./pages/Cart";
-import Checkout from "./pages/Checkout";
-import OrderConfirmation from "./pages/OrderConfirmation";
-import Wishlist from "./pages/Wishlist";
-import ProductDetail from "./pages/ProductDetail";
-import Account from "./pages/Account";
-import Admin from "./pages/Admin";
-import NotFound from "./pages/NotFound";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import Home from "@/pages/Home";
+import Products from "@/pages/Products";
+import ProductDetail from "@/pages/ProductDetail";
+import Cart from "@/pages/Cart";
+import Wishlist from "@/pages/Wishlist";
+import Checkout from "@/pages/Checkout";
+import Account from "@/pages/Account";
+import AdminDashboard from "@/pages/Admin/Dashboard";
 
-const queryClient = new QueryClient();
-
-const App = () => (
-<QueryClientProvider client={queryClient}>
-  <TooltipProvider>
+function App() {
+  return (
     <AuthProvider>
       <CartProvider>
         <WishlistProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
-              <Route path="/wishlist" element={<Wishlist />} />
-              <Route path="/product/:id" element={<ProductDetail />} />
-              <Route path="/account" element={<Account />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+          <Router>
+            <div className="min-h-screen flex flex-col bg-gradient-to-br from-champagne via-white to-soft-beige">
+              <Navbar />
+              <main className="flex-grow">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/wishlist" element={<Wishlist />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/account" element={<Account />} />
+                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                </Routes>
+              </main>
+              <Footer />
+              <Toaster />
+            </div>
+          </Router>
         </WishlistProvider>
       </CartProvider>
     </AuthProvider>
-  </TooltipProvider>
-</QueryClientProvider>
-
-);
+  );
+}
 
 export default App;
