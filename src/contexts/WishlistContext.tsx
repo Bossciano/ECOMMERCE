@@ -171,6 +171,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// IMPORTANT: This export must be present for components to import useWishlist
 export const useWishlist = () => {
   const context = useContext(WishlistContext);
   if (context === undefined) {
