@@ -1,14 +1,40 @@
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
-import { supabase } from "@/lib/supabase";
-import { Product } from "@/types/product";
+import { supabase } from "@/integrations/supabase/client";
 
-const ProductGrid = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  description: string | null;
+  stock_quantity: number;
+  rating: number | null;
+  is_active: boolean;
+  product_images: Array<{
+    image_url: string;
+    is_primary: boolean;
+  }> | null;
+}
+
+interface ProductGridProps {
+  products?: Product[];
+}
+
+const ProductGrid = ({ products: propsProducts }: ProductGridProps) => {
+  const [products, setProducts] = useState<Product[]>(propsProducts || []);
+  const [loading, setLoading] = useState(!propsProducts);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    // Only fetch if products weren't provided via props
+    if (!propsProducts) {
+      fetchProducts();
+    }
+  }, [propsProducts]);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
       const { data, error } = await supabase
         .from("products")
         .select(`
@@ -19,6 +45,7 @@ const ProductGrid = () => {
           description,
           stock_quantity,
           rating,
+          is_active,
           product_images (
             image_url,
             is_primary
@@ -29,33 +56,35 @@ const ProductGrid = () => {
 
       if (error) {
         console.error("Error fetching products:", error);
-      } else {
-        // Transform data to match Product type
-        const transformedProducts = data.map(p => ({
-          id: p.id,
-          name: p.name,
-          price: p.price,
-          category: p.category,
-          description: p.description,
-          inStock: p.stock_quantity > 0,
-          rating: p.rating || 0,
-          image: p.product_images?.find(img => img.is_primary)?.image_url || '',
-          images: p.product_images?.map(img => img.image_url) || []
-        }));
-        
-        setProducts(transformedProducts);
+        return;
       }
 
+      setProducts(data || []);
+    } catch (error) {
+      console.error("Error in fetchProducts:", error);
+    } finally {
       setLoading(false);
-    };
-
-    fetchProducts();
-  }, []);
+    }
+  };
 
   if (loading) {
     return (
-      <div className="py-20 text-center">
-        <p>Loading products...</p>
+      <div className="py-20 text-center bg-[#faf8f4]">
+        <div className="container mx-auto px-4">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 bg-gray-200 rounded w-1/4 mx-auto"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/3 mx-auto"></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-8">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="bg-white rounded-2xl p-4 border border-gray-200">
+                  <div className="aspect-square bg-gray-200 rounded-lg mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -75,16 +104,21 @@ const ProductGrid = () => {
 
         {products.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                image={product.image}
-                name={product.name}
-                price={product.price}
-                category={product.category}
-              />
-            ))}
+            {products.map((product) => {
+              const primaryImage = product.product_images?.find(img => img.is_primary);
+              const imageUrl = primaryImage?.image_url || product.product_images?.[0]?.image_url || '/placeholder.svg';
+              
+              return (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  image={imageUrl}
+                  name={product.name}
+                  price={product.price}
+                  category={product.category}
+                />
+              );
+            })}
           </div>
         ) : (
           <div className="text-center py-16">
