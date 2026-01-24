@@ -11,7 +11,7 @@ import Cart from "@/pages/Cart";
 import Wishlist from "@/pages/Wishlist";
 import Checkout from "@/pages/Checkout";
 import Account from "@/pages/Account";
-import AdminDashboard from "@/pages/Admin/Dashboard";
+import AdminDashboard from "@/pages/Admin";
 
 function App() {
   return (
@@ -30,7 +30,7 @@ function App() {
                   <Route path="/wishlist" element={<Wishlist />} />
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/account" element={<Account />} />
-                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                  <Route path="/admin" element={<Admin />} />
                 </Routes>
               </main>
               <Footer />
