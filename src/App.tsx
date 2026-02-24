@@ -6,6 +6,7 @@ import { WishlistProvider } from "@/contexts/WishlistProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Home from "@/pages/Index";
+import Products from "@/pages/Products"; // ✅ Add this
 import ProductDetail from "@/pages/ProductDetail";
 import Cart from "@/pages/Cart";
 import Wishlist from "@/pages/Wishlist";
@@ -30,7 +31,7 @@ function App() {
                   <Route path="/wishlist" element={<Wishlist />} />
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/account" element={<Account />} />
-                  <Route path="/admin" element={<Admin />} />
+                  <Route path="/admin" element={<AdminDashboard />} />
                 </Routes>
               </main>
               <Footer />
